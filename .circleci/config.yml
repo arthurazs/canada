@@ -5,10 +5,32 @@ jobs:
       - image: circleci/python:3.6
     steps:
       - checkout
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "requirements.txt" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
       - run:
+          name: install tox
           command: |
-            pip install tox --user
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install tox
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
+      - run:
+          name: run tox
+          command: |
+            . venv/bin/activate
             tox
-            tox -e codacy
       - store_artifacts:
-          path: coverage.xml
+          path: test-reports
+          destination: test-reports
+      - run:
+          name: upload to codacy
+          command: |
+            . venv/bin/activate
+            tox -e codacy
