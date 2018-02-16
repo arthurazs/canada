@@ -21,11 +21,13 @@ jobs:
           paths:
             - ./venv
           key: v1-dependencies-{{ checksum "requirements.txt" }}
+      - run: mkdir nosetests
       - run:
           name: run tests
           command: |
             . venv/bin/activate
             tox -e py36
+      - run: cp nosetests.xml nosetests/nosetests.xml
       - run:
           name: run flake8
           command: |
@@ -42,7 +44,7 @@ jobs:
             . venv/bin/activate
             tox -e xml
             tox -e codacy
-      - store_artifacts:
-          path: coverage.xml
+      - store_test_results:
+          path: nosetests
       - store_artifacts:
           path: flake8.txt

@@ -17,3 +17,6 @@ htmlcov
 
 # flake8
 flake8.txt
+
+# nosetests
+nosetests.xml
