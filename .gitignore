@@ -1,0 +1,16 @@
+# python
+__pycache__
+*.pyc
+
+# setup.py
+build
+dist
+*.egg-info
+*.egg
+
+#tox
+*.eggs
+.tox/
+.coverage
+coverage.xml
+htmlcov
