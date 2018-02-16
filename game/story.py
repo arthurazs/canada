@@ -17,9 +17,9 @@ class Story:
         return NotImplemented
 
     def __ne__(self, other):
-        x = self == other
-        if x is not NotImplemented:
-            return not x
+        equal = self == other
+        if equal is not NotImplemented:
+            return not equal
         return NotImplemented
 
     def __hash__(self):
