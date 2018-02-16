@@ -8,9 +8,12 @@ dist
 *.egg-info
 *.egg
 
-#tox
+# tox
 *.eggs
 .tox/
 .coverage
 coverage.xml
 htmlcov
+
+# flake8
+flake8.txt

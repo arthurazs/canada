@@ -1,7 +1,0 @@
-[run]
-source = game
-omit = *__init__.py
-
-[report]
-show_missing = True
-fail_under = 70
