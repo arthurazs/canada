@@ -7,7 +7,7 @@ jobs:
       - checkout
       - run:
           command: |
-            pip install tox
+            pip install tox --user
             tox
             tox -e codacy
       - store_artifacts:
