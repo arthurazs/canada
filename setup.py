@@ -21,9 +21,7 @@ setup(
     author_email='arthurazsoares@gmail.com',
     description=('Canada game.'),
     license='MIT',
-    keywords=(
-        'game canada'
-    ),
+    keywords=('game canada'),
     url=APP_URL,
     packages=['game', 'tests'],
     long_description=APP_LONG_DESCRIPTION,
