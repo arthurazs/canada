@@ -1,26 +1,60 @@
-from game.backpack import Backpack
 from game.vehicle import Vehicle
 
 
 class Player:
 
-    def __init__(self, name, p_agi=1, p_str=1, p_health=10):
+    def __init__(
+            self, name, vehicle, p_agi=1, p_str=1, p_health=10,
+            gas=0, energy=100, food=10):
         self._name = name
         self._health = p_health
         self._agi = p_agi
         self._str = p_str
         self._experience = 0
-        self._backpack = Backpack()
-        self._vehicle = Vehicle.car()
+        self._vehicle = vehicle
+
+        # will later be a class
+        self._gas = gas
+        self._food = food
+        self._energy = energy
+
+    @classmethod
+    def template(
+            cls, name=None, energy_usage=None, initial_energy=100):
+        resources = {'energy': initial_energy}
+        if energy_usage is None:
+            return cls(name, Vehicle.template(), **resources)
+        return cls(name, Vehicle.template(energy_usage), **resources)
+
+    # TODO If there's 5 gas left but needs to use 10, increase misfortune
+    def travel(self):
+        gas, food, energy = self._vehicle.get_usage()
+        leave_vehicle = False
+        died = False
+        if gas:
+            self._gas -= gas
+            if self._gas < 0:
+                leave_vehicle = True
+                self._gas = 0
+        self._food -= food
+        if self._food < 0:
+            energy += - self._food
+            self._food = 0
+        self._energy -= energy
+        if self._energy < 0:
+            died = self._lose_health(self._energy)
+            self._energy = 0
+        return leave_vehicle, died
 
     def get_health(self):
         '''test'''
         return self._health
 
-    def _lose_health(self):
-        if self._health > 0:
-            self._health -= 1
+    def _lose_health(self, amount):
+        amount = abs(amount)
+        self._health -= amount
         if self._health < 1:
+            self._health = 0
             return True
         return False
 
@@ -33,20 +67,11 @@ class Player:
     def get_agi(self):
         return self._agi
 
-    def attack(self, enemy):
-        hit = False
-        killed = False
-
-        if self._agi > enemy.get_agi():
-            if self._str > 0:
-                killed = enemy._lose_health()
-                if killed:
-                    self._xp_up()
-            hit = True
-        return hit, killed
-
     def __repr__(self):
-        params = f"('{self._name}', {self._agi}, {self._str}, {self._health})"
+        params = \
+            f"('{self._name}', {self._vehicle}, {self._agi}, " + \
+            f"{self._str}, {self._health}, {self._gas}, " + \
+            f"{self._energy}, {self._food})"
         return self.__class__.__name__ + params
 
     def __eq__(self, other):
